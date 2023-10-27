@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      /* Base styles for larger screens */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: white;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .product {
+        align-items: center;
+        text-align: center;
+        width: 50%;
+        height: 70vh;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+      }
+
+      .img-1 {
+        width: 100%;
+        height: 75vh;
+      }
+      .color-input {
+        margin: 10px;
+      }
+
+      #downloadButton {
+        background-color: lightblue;
+        color: black;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      #downloadButton:hover {
+        background-color: #0056b3;
+        color: #fff;
+      }
+
+      div {
+        background-color: #fff;
+        margin: 10px 0px;
+        padding: 0;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Media query for smaller screens (e.g., mobile devices) */
+      @media screen and (max-width: 768px) {
+        .product {
+          width: 80%;
+          padding: 0;
+          margin: 0;
+        }
+
+        .img-1 {
+          width: 100%;
+        }
+
+        div {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="product">
+      <img
+        src="image/Olive tree Final version logo transparent.png"
+        class="img-1"
+        id="imageToDownload"
+      />
+    </div>
+
+    <div>
+      <b
+        >Customize logo color:
+        <input type="color" class="color-input" value="#ff0000"
+      /></b>
+
+      <button id="downloadButton">Download Image</button>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const product = document.querySelector(".product");
+        const colorInput = document.querySelector(".color-input");
+        const downloadButton = document.getElementById("downloadButton");
+        const imageToDownload = document.getElementById("imageToDownload");
+
+        colorInput.addEventListener("input", function () {
+          const selectedColor = colorInput.value;
+          product.style.backgroundColor = selectedColor;
+        });
+
+        downloadButton.addEventListener("click", function () {
+          // Create a canvas element with a higher resolution and draw the image and the background color
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+
+          // Set canvas dimensions to a higher resolution, e.g., 3000x2000 (adjust as needed)
+          canvas.width = 700;
+          canvas.height = 480;
+
+          // Draw the background color
+          context.fillStyle = colorInput.value;
+          context.fillRect(0, 0, canvas.width, canvas.height);
+
+          // Calculate the scaling factors for the image
+          const scaleX = canvas.width / imageToDownload.width;
+          const scaleY = canvas.height / imageToDownload.height;
+
+          // Use the higher resolution canvas to draw the image at its original size
+          context.drawImage(
+            imageToDownload,
+            0,
+            0,
+            imageToDownload.width,
+            imageToDownload.height
+          );
+
+          // Convert the canvas content to a data URL in JPG format with a specified quality
+          const dataURL = canvas.toDataURL("image/jpeg", 10); // Set quality to 1 for the highest quality
+
+          // Create an anchor element to trigger the download
+          const a = document.createElement("a");
+          a.href = dataURL;
+          a.download = "customized_image.jpg";
+          a.style.display = "none"; // Hide the anchor element
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        });
+      });
+    </script>
+  </body>
+</html>
